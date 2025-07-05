@@ -1,6 +1,7 @@
 SRC = src/main.cpp \
       src/Neuron.cpp \
-	  src/Log.cpp 
+	  src/Log.cpp \
+	  src/ModulesNames.cpp 
 
 INCLUDE = include/Neuron.h \
 		  include/Layer.h \
