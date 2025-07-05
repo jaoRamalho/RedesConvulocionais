@@ -1,24 +1,23 @@
-# Makefile for Neural Network project
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -I. -Iinclude
+SRC = src/main.cpp \
+      src/Neuron.cpp \
+	  src/Log.cpp 
 
-DIR_SRC = src
-DIR_OBJ = obj
-DIR_INC = include
+INCLUDE = include/Neuron.h \
+		  include/Layer.h \
+		  include/Network.h \
+		  include/Log.hpp \
+		  include/ModulesNames.h 
 
-SRC = $(DIR_SRC)/main.cpp \
-      $(DIR_SRC)/Neuron.cpp 
-
-OBJ = $(SRC:$(DIR_SRC)/%.cpp=$(DIR_OBJ)/%.o)
+OBJ = $(SRC:src/%.cpp=obj/%.o)
 
 all: clean project
 
 project: $(OBJ)
-	$(CXX) $(CXXFLAGS) -o project $(OBJ)
+	g++ -std=c++17 -Wall -I. -Iinclude -o project $(OBJ)
 
-$(DIR_OBJ)/%.o: $(DIR_SRC)/%.cpp
-	@mkdir -p $(DIR_OBJ)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+obj/%.o: src/%.cpp
+	@mkdir -p obj
+	g++ -std=c++17 -Wall -I. -Iinclude -c $< -o $@
 
 clean:
 	rm -f $(OBJ) project

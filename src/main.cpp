@@ -1,8 +1,6 @@
-#include "Neuron.hpp"
-
+#include "Log.hpp"
 
 int main() {
-    Neuron neuron; 
 
     return 0;
 }
