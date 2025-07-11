@@ -1,13 +1,10 @@
 #include "Neuron.hpp"
+#include "Log.hpp"
 
-
-Neuron::Neuron(std::vector<int16_t> initialWeights, int16_t initialBias = 0, ActivationFunction func = SIGMOID)
-: weights(initialWeights), bias(initialBias), activationFunction(func), output(0)
-{
-
-
+Neuron::Neuron(NameActivationFunction func = SIGMOID) : 
+activationFunction(func), output(0) {
+    
 }
-
 
 Neuron::~Neuron() {
 
@@ -26,7 +23,7 @@ void Neuron::setWeight(int index, int16_t weight) {
     if (index >= 0 && index < weights.size()) {
         weights[index] = weight;
     } else {
-        std::cerr << "Index out of bounds" << std::endl;
+        logPrintf(Error, MODULE_NEURON, "Index out of bounds in setWeight: %d", index);
     }
 }
 
@@ -38,7 +35,7 @@ int16_t Neuron::getWeight(int index) const {
     if (index >= 0 && index < weights.size()) {
         return weights[index];
     } else {
-        std::cerr << "Index out of bounds" << std::endl;
+        logPrintf(Error, MODULE_NEURON, "Index out of bounds in getWeight: %d", index);
         return 0; // or throw an exception
     }
 }
@@ -51,46 +48,30 @@ int16_t Neuron::getOutput() const {
     return output;
 }
 
-int16_t Neuron::activate(const std::vector<int16_t>& inputs) const {
+int16_t Neuron::activate(const std::vector<int16_t>& inputs) {
     if (inputs.size() != weights.size()) {
-        std::cerr << "Input size does not match weights size" << std::endl;
+        logPrintf(Error, MODULE_NEURON, "Input size does not match weights size: %zu vs %zu", inputs.size(), weights.size());
         return 0; // or throw an exception
     }
 
-    int16_t sum = bias;
+    int64_t sum = bias;
     for (size_t i = 0; i < inputs.size(); ++i) {
         sum += inputs[i] * weights[i];
     }
 
-    switch (activationFunction) {
-        case SIGMOID:
-            return sigmoid(sum);
-        case TANH:
-            return tanh(sum);
-        case RELU:
-            return relu(sum);
-        case LEAKY_RELU:
-            return leakyRelu(sum);
-        default:
-            std::cerr << "Unknown activation function" << std::endl;
-            return 0; // or throw an exception
+    // Apply the activation function
+    output = ActivationFunctions::activationFunction(sum, activationFunction);
+}
+
+void Neuron::updateWeights(const std::vector<int16_t>& gradients, float learningRate) {
+    if (gradients.size() != weights.size()) {
+        logPrintf(Error, MODULE_NEURON, "Gradients size does not match weights size: %zu vs %zu", gradients.size(), weights.size());
+        return; // or throw an exception
     }
-}
 
-int16_t Neuron::sigmoid(int16_t x) const {
-    return static_cast<int16_t>((1 / (1 + std::exp(-x))) * 32767); // Scale to int16_t range
-}
-
-int16_t Neuron::tanh(int16_t x) const {
-    return static_cast<int16_t>(std::tanh(x) * 32767); // Scale to int16_t range
-}
-
-int16_t Neuron::relu(int16_t x) const {
-    return (x > 0) ? x : 0;
-}
-
-int16_t Neuron::leakyRelu(int16_t x) const {
-    return (x > 0) ? x : static_cast<int16_t>(0.01 * x);
+    for (size_t i = 0; i < weights.size(); ++i) {
+        weights[i] -= static_cast<int16_t>(learningRate * gradients[i]);
+    }
 }
 
 

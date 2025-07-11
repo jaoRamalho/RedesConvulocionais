@@ -3,26 +3,19 @@
 
 #include <vector>
 #include <iostream>
-#include <cmath>
-#include <cstdint>
-
-
-enum ActivationFunction {
-    SIGMOID,
-    TANH,
-    RELU,
-    LEAKY_RELU
-};
+#include "ModulesNames.h" 
+#include "Macros.hpp"
+#include "ActivationFunctions.hpp"
 
 class Neuron {
 private:
     std::vector<int16_t> weights;
     int16_t bias;
-    ActivationFunction activationFunction;
+    NameActivationFunction activationFunction;
     int16_t output;
 
 public:
-    Neuron(std::vector<int16_t> initialWeights, int16_t initialBias, ActivationFunction func);
+    Neuron(NameActivationFunction);
     ~Neuron();
     
     void setWeights(const std::vector<int16_t>& newWeights);
@@ -34,12 +27,8 @@ public:
     int16_t getBias() const;
     int16_t getOutput() const;
 
-    int16_t activate(const std::vector<int16_t>& inputs) const;
-    
-    int16_t sigmoid(int16_t x) const;
-    int16_t tanh(int16_t x) const;
-    int16_t relu(int16_t x) const;
-    int16_t leakyRelu(int16_t x) const;
+    int16_t activate(const std::vector<int16_t>& inputs);
+    void updateWeights(const std::vector<int16_t>& gradients, float learningRate); 
 };
 
 

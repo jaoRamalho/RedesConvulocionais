@@ -1,18 +1,14 @@
 #ifndef LOG_HPP
 #define LOG_HPP
 
-#define MICROCONTROLLER 0
-#define COMPUTER 1
-
 
 #include "stdint.h"
 #include "ModulesNames.h"
+#include "Macros.hpp"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 
 typedef enum {
     Error = 0,
