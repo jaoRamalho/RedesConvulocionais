@@ -21,7 +21,7 @@ int16_t ActivationFunctions::softmax(int32_t x) {
 int16_t ActivationFunctions::activationFunction(int32_t x, NameActivationFunction activationFunction) {
     switch (activationFunction) {
         case SIGMOID:
-            return sigmoid(x);
+            return sigmoid(x); 
         case TANH:
             return tanh(x);
         case RELU:

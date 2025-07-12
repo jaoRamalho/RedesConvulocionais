@@ -3,11 +3,11 @@
 
 #include "Macros.hpp"
 
-enum NameActivationFunction {
-    SIGMOID,
-    TANH,
-    RELU, 
-    SOFTMAX
+enum NameActivationFunction : uint8_t {
+    SIGMOID = 0,
+    TANH = 1,
+    RELU = 2, 
+    SOFTMAX = 3
 };
 
 class ActivationFunctions {

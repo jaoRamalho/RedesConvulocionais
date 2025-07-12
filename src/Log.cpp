@@ -1,6 +1,5 @@
 #include "Log.hpp"
 
-
 #if MICROCONTROLLER
 
 #include <string>
@@ -173,6 +172,7 @@ uint8_t getLogRB(){
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
+#include <string>
 
 void logPrintf(Log_LevelInfo levelInfo, const char *module, const char *format, ...) {
     time_t now = time(NULL);
@@ -208,14 +208,20 @@ void logPrintf(Log_LevelInfo levelInfo, const char *module, const char *format, 
 }
 
 void logPrintfFile(Log_LevelInfo levelInfo, const char *module, const char *format, ...) {
-    FILE *file = fopen("log.txt", "a");
+    time_t now = time(NULL);
+    struct tm *tm_info = localtime(&now);
+
+    char nameFile[64] = {0};
+    char data[32] = {0};
+    snprintf(data, sizeof(data), "%02d%02d%04d", tm_info->tm_mday, tm_info->tm_mon + 1, tm_info->tm_year + 1900);
+    snprintf(nameFile, sizeof(nameFile), "log/log[%s].log", data);
+
+    FILE *file = fopen(nameFile, "a");
     if (file == NULL) {
         perror("Failed to open log file");
         return;
     }
 
-    time_t now = time(NULL);
-    struct tm *tm_info = localtime(&now);
     fprintf(file, "[%02d/%02d/%04d %02d:%02d:%02d] ", 
             tm_info->tm_mday, 
             tm_info->tm_mon + 1, 
